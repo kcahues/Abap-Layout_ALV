@@ -1,0 +1,18 @@
+*&---------------------------------------------------------------------*
+*& Report  ZPGM_PRINCIPAL
+*&  Author Kevin Cahues 
+*&---------------------------------------------------------------------*
+REPORT  zpgm_principal.
+
+INCLUDE: zinclude_top,
+         zinclude_f01.
+      
+"Evento para obtener los layout guardados por el usuario      
+AT SELECTION-SCREEN ON VALUE-REQUEST FOR p_layout.
+  PERFORM f0100_layout.
+  
+START-OF-SELECTION.
+PERFORM f0200_carga_layout.
+
+END-OF-SELECTION.
+PERFORM f0400_muestra_alv.
