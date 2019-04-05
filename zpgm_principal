@@ -4,6 +4,7 @@
 *&---------------------------------------------------------------------*
 ```
 REPORT  zpgm_principal.
+```
 
 INCLUDE: zinclude_top,
          zinclude_f01.
@@ -17,4 +18,4 @@ PERFORM f0200_carga_layout.
 
 END-OF-SELECTION.
 PERFORM f0400_muestra_alv.
-```
+
