@@ -1,0 +1,95 @@
+*&---------------------------------------------------------------------*
+*&      Form  F0100_LAYOUT
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+FORM f0100_layout .
+  "Nombre del programa
+  sg_varian-report = sy-repid.
+  "Usuario que ejecuta
+  sg_varian-username = sy-uname.
+  APPEND sg_varian.
+  
+  "Función para obtener las variantes
+  CALL FUNCTION 'REUSE_ALV_VARIANT_F4'
+    EXPORTING
+      is_variant          = sg_varian
+      it_default_fieldcat = tg_fieldcat
+      i_save              = 'A'
+    IMPORTING
+      es_variant          = sg_varian
+    EXCEPTIONS
+      not_found           = 1
+      program_error       = 2
+      OTHERS              = 3.
+  IF sy-subrc = 0.
+    "Se asigna al parametro de selección
+    p_layout = sg_varian-variant.
+  ENDIF.
+ENDFORM.                    " F0100_LAYOUT
+*&---------------------------------------------------------------------*
+*&      Form  F0200_CARGA_LAYOUT
+*&---------------------------------------------------------------------*
+*       text
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+FORM f0200_carga_layout .
+  IF p_layout IS NOT INITIAL.
+    IF sg_varian-report IS INITIAL.
+      "Nombre del programa
+      sg_varian-report = sy-repid.
+      "Nombre de usuario
+      sg_varian-username = sy-uname.
+      "Nombre de la variante a cargar
+      sg_varian-variant = p_layout.
+      APPEND sg_varian.
+    ENDIF.
+  ENDIF.
+ENDFORM.                    " F0200_CARGA_LAYOUT
+*&---------------------------------------------------------------------*
+*&      Form  F0400_MUESTRA_ALV
+*&---------------------------------------------------------------------*
+*       Se muestra el reporte alv con todas las configuraciones
+*----------------------------------------------------------------------*
+*  -->  p1        text
+*  <--  p2        text
+*----------------------------------------------------------------------*
+FORM f0400_muestra_alv .
+  "Se crea el catalogo
+  CALL FUNCTION 'REUSE_ALV_FIELDCATALOG_MERGE'
+   EXPORTING
+     i_structure_name             = 'ZMM_RESERVA_1_ST' "Estructura creada en SE11
+    CHANGING
+      ct_fieldcat                  = tg_fieldcat "Catalogo a enviar al reporte
+   EXCEPTIONS
+     inconsistent_interface       = 1
+     program_error                = 2
+     OTHERS                       = 3.
+  IF sy-subrc <> 0.
+    MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+            WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+  ENDIF.
+  
+  CALL FUNCTION 'REUSE_ALV_GRID_DISPLAY'
+    EXPORTING
+      i_callback_program = sg_repid
+      is_layout          = sg_layout
+      it_fieldcat        = tg_fieldcat
+      i_save             = 'A'
+      is_variant         = sg_varian "Parte donde se lee el layout
+    TABLES
+      t_outtab           = tg_reporte
+    EXCEPTIONS
+      program_error      = 1
+      OTHERS             = 2.
+  IF sy-subrc <> 0.
+    MESSAGE ID sy-msgid TYPE sy-msgty NUMBER sy-msgno
+            WITH sy-msgv1 sy-msgv2 sy-msgv3 sy-msgv4.
+  ENDIF.
+
+ENDFORM.                    " F0400_MUESTRA_ALV
