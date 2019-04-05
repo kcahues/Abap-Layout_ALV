@@ -1,0 +1,22 @@
+"Repositorio de estructura del sistema, se añade dependiendo del sistema
+"Si no se requiere no debe de agregarse esta parte
+TYPE-POOLS: slis.
+
+*----------------------------------------------------------------------
+*                            VARIABLES
+*----------------------------------------------------------------------
+
+DATA:
+     "Estructura donde se asigna la variante
+     sg_varian LIKE disvariant OCCURS 0 WITH HEADER LINE, "#EC NEEDED
+     "Catalogo 
+     tg_fieldcat TYPE slis_t_fieldcat_alv,
+     "Layout a cargar para el reporte
+     sg_layout   TYPE slis_layout_alv.
+     
+*----------------------------------------------------------------------
+*                       PARAMETROS DE SELECCION
+*----------------------------------------------------------------------
+SELECTION-SCREEN BEGIN OF BLOCK bl2 WITH FRAME TITLE text-t02.
+PARAMETER: p_layout LIKE disvariant-variant.
+SELECTION-SCREEN END OF BLOCK bl2.
