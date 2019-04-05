@@ -2,6 +2,7 @@
 *& Report  ZPGM_PRINCIPAL
 *&  Author Kevin Cahues 
 *&---------------------------------------------------------------------*
+```
 REPORT  zpgm_principal.
 
 INCLUDE: zinclude_top,
@@ -16,3 +17,4 @@ PERFORM f0200_carga_layout.
 
 END-OF-SELECTION.
 PERFORM f0400_muestra_alv.
+```
